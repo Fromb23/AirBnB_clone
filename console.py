@@ -1,8 +1,17 @@
 #!/usr/bin/python3
 
+import models
+import uuid
+import sys
 import cmd
+from models.base_model import BaseModel
 
 class HBNBCommand(cmd.Cmd):
+    def __init__(self):
+        self.__objects = {}
+        self.completekey = None
+        self.cmdqueue = []
+        self.stdout = sys.stdout
     prompt = "(hbnb) "
     def do_quit(self, arg):
         """Quit command to exit the program..."""
@@ -16,5 +25,129 @@ class HBNBCommand(cmd.Cmd):
         """Do nothing on an empty line"""
         pass
 
+    def do_create(self, arg):
+        """Create a new class instance"""
+        if not arg:
+            print("** class name missing **")
+            return
+        class_name = arg.split()[0]
+        try:
+            cls = globals()[class_name]
+        except KeyError:
+            print("** class doens't exist **")
+            return
+        instance = cls()
+        instance.id = str(uuid.uuid4())
+        instance.save()
+        print(instance.id)
+
+    def do_show(self, arg):
+        """Print the string representation of an instance"""
+
+        args = arg.split()
+        if not args:
+            print("** classs name missing **")
+            return
+        class_name = args[0]
+        try:
+            cls = globals()[class_name]
+        except KeyError:
+            print("** class doesn't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id is missing **")
+            return
+        instance_id = args[1]
+        key = class_name + '.' + instance_id
+
+        if key not in self.__objects:
+            print ("** instance not found **")
+            return
+        print(self.__objects[key])
+
+    def do_destroy(self, arg):
+        """Deletes an instance based on the class name and id"""
+        args = arg.split()
+        if not args:
+            print("** class name missing **")
+            return
+        class_name = args[0]
+        try:
+            cls = globals()[class_name]
+        except KeyError:
+            print("** class doesen't exist **")
+            return
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = args[1]
+        key = class_name + '.' + instance_id
+
+        if key not in self.__objects:
+            print("** no instance found **")
+            return
+
+        del self.__objects[key]
+        self.save()
+
+    def do_all(self, arg):
+        """Prints all string representation of all instances"""
+        if not arg:
+            instances = models.storag.all().values()
+            print([str(instance) for instance in instances])
+        else:
+            class_name = arg.split()[0]
+            try:
+                cls = globals()[class_name]
+            except KeyError:
+                print("** class doesn't exist **")
+                return
+            instances = [str(instance) for key, instance in models.storage.all().items() if key.split('.')[0] == class_name]
+            print(instances)
+
+    def do_update(self, arg):
+        """Updates an instance based on the class name and id"""
+        args = arg.split()
+        if not args:
+            print("** class name missing **")
+            return
+
+        class_name = args[0]
+        try:
+            cls = globals()[class_name]
+        except KeyError:
+            print("** class doesn't exist **")
+            return
+
+        if len(args) < 2:
+            print("** instance id missing **")
+            return
+
+        instance_id = args[1]
+        key = "{}.{}".format(class_name, instance_id)
+        objects = models.storage.all()
+
+        if key not in objects:
+            print("** attribute name missing **")
+            return
+
+        attr_name = args[2]
+        if len(args) < 4:
+            print("** value missing **")
+            return
+
+        attr_value = args[3].strip('""')
+
+        instance = objects[key]
+        if hasattr(instance, attr_name):
+            attr_type = type(getattr(instance, attr_name))
+            instance.save()
+        else:
+            print("** attribute doesn't exist **")
+
 if __name__ == '__main__':
-    HBNBCommand().cmdloop()
+    try:
+        HBNBCommand().cmdloop()
+    except KeyboardInterrupt:
+        print("Program interrupted by User")
