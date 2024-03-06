@@ -27,3 +27,6 @@ class testBaseModel(unittest.TestCase):
         now = datetime.datetime.now()
         # Allow for a small amount of tim difference
         self.assertAlmostEqual(self._basemodel.updated_at.timestamp(), now.timestamp(), delta=1)
+
+    def test_str(self):
+    def test_save(self):
