@@ -4,6 +4,7 @@ import models
 import uuid
 import sys
 import cmd
+from models import storage
 from models.base_model import BaseModel
 
 class HBNBCommand(cmd.Cmd):
@@ -13,6 +14,7 @@ class HBNBCommand(cmd.Cmd):
         self.cmdqueue = []
         self.stdout = sys.stdout
     prompt = "(hbnb) "
+
     def do_quit(self, arg):
         """Quit command to exit the program..."""
         return True
@@ -58,12 +60,19 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id is missing **")
             return
         instance_id = args[1]
-        key = class_name + '.' + instance_id
+        objects = storage.all()
 
-        if key not in self.__objects:
+        is_not_found = False
+        for key, value in objects.items():
+            if key == f"{class_name}.{instance_id}":
+                print(value)
+                is_not_found = False
+                return
+            else:
+                is_not_found = True
+        
+        if is_not_found:
             print ("** instance not found **")
-            return
-        print(self.__objects[key])
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
@@ -82,14 +91,14 @@ class HBNBCommand(cmd.Cmd):
             return
 
         instance_id = args[1]
-        key = class_name + '.' + instance_id
-
-        if key not in self.__objects:
-            print("** no instance found **")
+        objects = storage.all()
+        
+        if f"{class_name}.{instance_id}" in objects:
+            del objects[f"{class_name}.{instance_id}"]
+            storage.save()
             return
-
-        del self.__objects[key]
-        self.save()
+        else:
+            print("** no instance found **")
 
     def do_all(self, arg):
         """Prints all string representation of all instances"""
@@ -127,9 +136,13 @@ class HBNBCommand(cmd.Cmd):
         instance_id = args[1]
         key = "{}.{}".format(class_name, instance_id)
         objects = models.storage.all()
+        print(objects)
 
-        if key not in objects:
-            print("** attribute name missing **")
+        if key not in objects.keys():
+            print("** key-value missing **")
+            return
+        if len(args) < 3:
+            print("** attribute missing **")
             return
 
         attr_name = args[2]
@@ -140,11 +153,8 @@ class HBNBCommand(cmd.Cmd):
         attr_value = args[3].strip('""')
 
         instance = objects[key]
-        if hasattr(instance, attr_name):
-            attr_type = type(getattr(instance, attr_name))
-            instance.save()
-        else:
-            print("** attribute doesn't exist **")
+        setattr(instance, attr_name, attr_value)
+        storage.save()
 
 if __name__ == '__main__':
     try:
