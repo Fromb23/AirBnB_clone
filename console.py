@@ -4,6 +4,7 @@ import models
 import uuid
 import sys
 import cmd
+from models import storage
 from models.base_model import BaseModel
 
 class HBNBCommand(cmd.Cmd):
@@ -13,6 +14,7 @@ class HBNBCommand(cmd.Cmd):
         self.cmdqueue = []
         self.stdout = sys.stdout
     prompt = "(hbnb) "
+
     def do_quit(self, arg):
         """Quit command to exit the program..."""
         return True
@@ -58,12 +60,14 @@ class HBNBCommand(cmd.Cmd):
             print("** instance id is missing **")
             return
         instance_id = args[1]
-        key = class_name + '.' + instance_id
+        objects = storage.all()
 
-        if key not in self.__objects:
-            print ("** instance not found **")
-            return
-        print(self.__objects[key])
+        for key, value in objects.items():
+            if key == f"{class_name}.{instance_id}":
+                print(value)
+                return
+            else:
+                print ("** instance not found **")
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
@@ -145,6 +149,7 @@ class HBNBCommand(cmd.Cmd):
             instance.save()
         else:
             print("** attribute doesn't exist **")
+
 
 if __name__ == '__main__':
     try:

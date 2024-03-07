@@ -24,7 +24,8 @@ class BaseModel:
             updated_at (datetime): Timestamp representing the last update time.
         """
 
-        self.id = str(uuid.uuid4())
+        self.id = kwargs.get("id", str(uuid.uuid4()))
+
         if "created_at" in kwargs:
             self.created_at = datetime.strptime(kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
         else:
@@ -35,8 +36,9 @@ class BaseModel:
         else:
             self.updated_at = datetime.now()
 
+
         for key, value in kwargs.items():
-            if key not in ["__class__", "created_at", "updated_at"]:
+            if key not in ["__class__", "id", "created_at", "updated_at"]:
                 setattr(self, key, value)
 
         if not kwargs:
@@ -52,7 +54,7 @@ class BaseModel:
     def save(self):
         """
         Saves the current instance to the storage.
-        
+
         Updates the 'updated_at' attribute and calls the storage save method.
         """
         self.updated_at = datetime.now()
