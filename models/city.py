@@ -20,3 +20,10 @@ class City(BaseModel):
         super().__init__(**kwargs)
         self.state_id = state_id
         self.name = name
+
+    def to_dict_city(self):
+        city_dict = {
+                'state_id' : self.state_id,
+                'name' : self.name
+                }
+        return city_dict

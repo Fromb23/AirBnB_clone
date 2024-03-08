@@ -17,3 +17,9 @@ class State(BaseModel):
         """
         super().__init__(**kwargs)
         self.name = name
+
+    def to_state_dict(self):
+        state_dict = {
+                'name' : self.name
+                }
+        return state_dict

@@ -17,3 +17,9 @@ class Amenity(BaseModel):
         """
         super().__init__(**kwargs)
         self.name = name
+
+    def to_dict_amenity(self):
+        amenity_dict = {
+                'name' : name
+                }
+        return amenity_dict

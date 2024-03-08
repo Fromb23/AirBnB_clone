@@ -36,6 +36,12 @@ class FileStorage:
 
     def save(self):
         from models.user import User
+        from models.city import City
+        from models.place import Place
+        from models.state import State
+        from models.amenity import Amenity
+        from models.review import Review
+
         """
         Saves the objects dictionary to a JSON file.
 
@@ -52,9 +58,15 @@ class FileStorage:
 
             with open(self.__file_path, 'w') as file:
                 # Convert objects dictionary to JSON string
-                json_string = json.dumps(
-                        [obj.to_dict() if not isinstance(obj, User) else obj.to_dict_user() for obj in self.__objects.values()]
-                        )
+                instances = [
+                        User().to_dict_user(),
+                        City().to_dict_city(),
+                        Amenity().to_dict_amenity(),
+                        Place().to_dict_place(),
+                        Review().to_dict_review(),
+                        State().to_dict_state()
+                        ]
+                json_string = json.dumps(instances)
                 # Write JSON string to file at file path
                 file.write(json_string)
             return True
@@ -71,6 +83,11 @@ class FileStorage:
         """
         from models.base_model import BaseModel
         from models.user import User
+        from models.city import City
+        from models.place import Place
+        from models.state import State
+        from models.amenity import Amenity
+        from models.review import Review
 
         if os.path.exists(self.__file_path):
             try:
@@ -79,8 +96,16 @@ class FileStorage:
                     objects_data = json.loads(data)
                     for obj_data in objects_data:
                         class_name = obj_data['__class__']
-                        if class_name == "User":
+                        if class_name == 'User':
                             obj = User(**obj_data)
+                        elif class_name == 'City':
+                            obj = City(**obj_data)
+                        elif class_name == 'Amenity':
+                            obj = Amenity(**obj_data)
+                        elif class_name == 'Review':
+                            obj = Review(**obj_data)
+                        elif class_name == 'State':
+                            obj = State(**obj_data)
                         else:
                             obj = BaseModel(**obj_data)
                         self.__objects[obj.__class__.__name__ + "." + obj.id] = obj

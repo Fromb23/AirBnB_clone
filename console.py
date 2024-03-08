@@ -12,7 +12,7 @@ class HBNBCommand(cmd.Cmd):
     def __init__(self):
         self.__objects = {
                 'User' : User,
-                'BaseModel' : BaseModel
+                'BaseModel' : BaseModel,
                 }
         self.completekey = None
         self.cmdqueue = []
