@@ -6,10 +6,14 @@ import sys
 import cmd
 from models import storage
 from models.base_model import BaseModel
+from models.user import User
 
 class HBNBCommand(cmd.Cmd):
     def __init__(self):
-        self.__objects = {}
+        self.__objects = {
+                'User' : User,
+                'BaseModel' : BaseModel
+                }
         self.completekey = None
         self.cmdqueue = []
         self.stdout = sys.stdout

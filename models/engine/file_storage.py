@@ -35,6 +35,7 @@ class FileStorage:
 
 
     def save(self):
+        from models.user import User
         """
         Saves the objects dictionary to a JSON file.
 
@@ -51,7 +52,9 @@ class FileStorage:
 
             with open(self.__file_path, 'w') as file:
                 # Convert objects dictionary to JSON string
-                json_string = json.dumps([obj.to_dict() for obj in self.__objects.values()])
+                json_string = json.dumps(
+                        [obj.to_dict() if not isinstance(obj, User) else obj.to_dict_user() for obj in self.__objects.values()]
+                        )
                 # Write JSON string to file at file path
                 file.write(json_string)
             return True
@@ -67,28 +70,21 @@ class FileStorage:
             bool: True if successful, False otherwise.
         """
         from models.base_model import BaseModel
+        from models.user import User
 
         if os.path.exists(self.__file_path):
             try:
-                classes = {"BaseModel": BaseModel}
                 with open(self.__file_path, 'r') as file:
                     data = file.read()
                     objects_data = json.loads(data)
                     for obj_data in objects_data:
                         class_name = obj_data['__class__']
-                        try:
-                            obj = classes[class_name](**obj_data)
-                        except KeyError as ke:
-                            print(f"Error reloading file: Class '{class_name}' not found in allowed classes.")
-                            return False
-                        except Exception as e:
-                            print(f"Error reloading file: {e}")
-                            return False
-                        key = f"{class_name}.{obj.id}"
-                        self.__objects[key] = obj
+                        if class_name == "User":
+                            obj = User(**obj_data)
+                        else:
+                            obj = BaseModel(**obj_data)
+                        self.__objects[obj.__class__.__name__ + "." + obj.id] = obj
                 return True
             except Exception as e:
                 print(f"Error reloading file: {e}")
                 return False
-        else:
-            return False
