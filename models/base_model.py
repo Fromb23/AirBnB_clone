@@ -41,8 +41,8 @@ class BaseModel:
             if key not in ["__class__", "id", "created_at", "updated_at"]:
                 setattr(self, key, value)
 
-        if not kwargs:
-            storage.new(self)
+        print(self.to_dict())
+        storage.new(self)
 
 
     def __str__(self):
@@ -58,6 +58,7 @@ class BaseModel:
         Updates the 'updated_at' attribute and calls the storage save method.
         """
         self.updated_at = datetime.now()
+        print("save inside base model")
         storage.save()
 
 
@@ -76,7 +77,3 @@ class BaseModel:
         dict_copy['updated_at'] = self.updated_at.isoformat()
 
         return dict_copy
-
-# Assume dict_instance is a dictionary representation of an instance
-dict_instance = {'name' : 'Rombo', 'age' : 22}
-new_instance = BaseModel(**dict_instance)

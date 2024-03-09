@@ -20,6 +20,6 @@ class Amenity(BaseModel):
 
     def to_dict_amenity(self):
         amenity_dict = {
-                'name' : name
+                'name' : self.name
                 }
         return amenity_dict
