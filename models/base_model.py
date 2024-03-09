@@ -41,7 +41,6 @@ class BaseModel:
             if key not in ["__class__", "id", "created_at", "updated_at"]:
                 setattr(self, key, value)
 
-        print(self.to_dict())
         storage.new(self)
 
 
@@ -58,7 +57,6 @@ class BaseModel:
         Updates the 'updated_at' attribute and calls the storage save method.
         """
         self.updated_at = datetime.now()
-        print("save inside base model")
         storage.save()
 
 

@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-print("start filestrogae")
 import json
 import os
 
@@ -32,8 +31,6 @@ class FileStorage:
         """
         Saves the objects dictionary to a JSON file.
         """
-        print("save inside file storage")
-        print(self.__objects)
         with open(self.__file_path, 'w') as file:
             json_string = json.dumps(self.__objects)
             file.write(json_string)
@@ -45,7 +42,5 @@ class FileStorage:
         if os.path.exists(self.__file_path):
             with open(self.__file_path, 'r') as file:
                 data = file.read()
-                print("Empty line")
                 objects_data = json.loads(data)
-                print(type(objects_data))
                 self.__objects = objects_data
