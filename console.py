@@ -7,12 +7,22 @@ import cmd
 from models import storage
 from models.base_model import BaseModel
 from models.user import User
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.state import State
+from models.review import Review
 
 class HBNBCommand(cmd.Cmd):
     def __init__(self):
         self.__objects = {
                 'User' : User,
-                'BaseModel' : BaseModel
+                'BaseModel' : BaseModel,
+                'City' : City,
+                'Place' : Place,
+                'Amenity' : Amenity,
+                'State' : State,
+                'Review' : Review
                 }
         self.completekey = None
         self.cmdqueue = []

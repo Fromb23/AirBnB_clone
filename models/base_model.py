@@ -41,8 +41,7 @@ class BaseModel:
             if key not in ["__class__", "id", "created_at", "updated_at"]:
                 setattr(self, key, value)
 
-        if not kwargs:
-            storage.new(self)
+        storage.new(self)
 
 
     def __str__(self):
@@ -76,7 +75,3 @@ class BaseModel:
         dict_copy['updated_at'] = self.updated_at.isoformat()
 
         return dict_copy
-
-# Assume dict_instance is a dictionary representation of an instance
-dict_instance = {'name' : 'Rombo', 'age' : 22}
-new_instance = BaseModel(**dict_instance)
