@@ -7,23 +7,6 @@ class City(BaseModel):
     """
     A class representing a city, inheriting from BaseModel.
     """
+    state_id = ""
+    name = ""
 
-    def __init__(self, state_id="", name="", **kwargs):
-        """
-        Initializes a city with state_id and name.
-
-        Args:
-            state_id (str): Id of the state which the city belongs.
-            name (str): Name of the city.
-            **kwargs: Additional keyword argumenents for the base class.
-        """
-        super().__init__(**kwargs)
-        self.state_id = state_id
-        self.name = name
-
-    def to_dict_city(self):
-        city_dict = {
-                'state_id' : self.state_id,
-                'name' : self.name
-                }
-        return city_dict
