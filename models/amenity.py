@@ -2,6 +2,7 @@
 
 from models.base_model import BaseModel
 
+
 class Amenity(BaseModel):
     """
     A class representing an amenity, inheriting from BaseModel.
