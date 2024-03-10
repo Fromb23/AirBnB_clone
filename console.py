@@ -38,6 +38,7 @@ class HBNBCommand(cmd.Cmd):
     def do_EOF(self, arg):
         """Handle EOF (Ctrl + D)"""
         print("Exiting...")
+        return True
 
     def emptyline(self):
         """Do nothing on an empty line"""
@@ -176,9 +177,8 @@ class HBNBCommand(cmd.Cmd):
         setattr(instance, attr_name, attr_value)
         storage.save()
 
+def main():
+    HBNBCommand().cmdloop()
 
 if __name__ == '__main__':
-    try:
-        HBNBCommand().cmdloop()
-    except KeyboardInterrupt:
-        print("Program interrupted by User")
+    main()
