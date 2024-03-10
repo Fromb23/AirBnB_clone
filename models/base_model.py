@@ -5,6 +5,7 @@ from datetime import datetime
 from models.engine.file_storage import FileStorage
 from models import storage
 
+
 class BaseModel:
     """
     Base class for other classes to inherit common attributes and methods.
@@ -27,15 +28,18 @@ class BaseModel:
         self.id = kwargs.get("id", str(uuid.uuid4()))
 
         if "created_at" in kwargs:
-            self.created_at = datetime.strptime(kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            self.created_at = datetime.strptime(
+                    kwargs["created_at"], "%Y-%m-%dT%H:%M:%S.%f"
+                    )
         else:
             self.created_at = datetime.now()
 
         if "updated_at" in kwargs:
-            self.updated_at = datetime.strptime(kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f")
+            self.updated_at = datetime.strptime(
+                    kwargs["updated_at"], "%Y-%m-%dT%H:%M:%S.%f"
+                    )
         else:
             self.updated_at = datetime.now()
-
 
         for key, value in kwargs.items():
             if key not in ["__class__", "id", "created_at", "updated_at"]:
@@ -43,12 +47,13 @@ class BaseModel:
 
         storage.new(self)
 
-
     def __str__(self):
         """
         Returns (str) string representation of the instance.
         """
-        return "[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(
+                self.__class__.__name__, self.id, self.__dict__
+                )
 
     def save(self):
         """
@@ -58,7 +63,6 @@ class BaseModel:
         """
         self.updated_at = datetime.now()
         storage.save()
-
 
     def to_dict(self):
         """
