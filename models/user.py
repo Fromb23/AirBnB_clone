@@ -2,6 +2,7 @@
 
 from models.base_model import BaseModel
 
+
 class User(BaseModel):
     """
     A class represnting a user, inheriting from BaseModel.
