@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+
 import models
 import uuid
 import sys
@@ -13,16 +14,17 @@ from models.amenity import Amenity
 from models.state import State
 from models.review import Review
 
+
 class HBNBCommand(cmd.Cmd):
     def __init__(self):
         self.__objects = {
-                'User' : User,
-                'BaseModel' : BaseModel,
-                'City' : City,
-                'Place' : Place,
-                'Amenity' : Amenity,
-                'State' : State,
-                'Review' : Review
+                'User': User,
+                'BaseModel': BaseModel,
+                'City': City,
+                'Place': Place,
+                'Amenity': Amenity,
+                'State': State,
+                'Review': Review
                 }
         self.completekey = None
         self.cmdqueue = []
@@ -84,9 +86,9 @@ class HBNBCommand(cmd.Cmd):
                 return
             else:
                 is_not_found = True
-        
+
         if is_not_found:
-            print ("** instance not found **")
+            print("** instance not found **")
 
     def do_destroy(self, arg):
         """Deletes an instance based on the class name and id"""
@@ -106,7 +108,7 @@ class HBNBCommand(cmd.Cmd):
 
         instance_id = args[1]
         objects = storage.all()
-        
+
         if f"{class_name}.{instance_id}" in objects:
             del objects[f"{class_name}.{instance_id}"]
             storage.save()
@@ -126,7 +128,11 @@ class HBNBCommand(cmd.Cmd):
             except KeyError:
                 print("** class doesn't exist **")
                 return
-            instances = [str(instance) for key, instance in models.storage.all().items() if key.split('.')[0] == class_name]
+            instances = [
+                    str(instance) for key,
+                    instance in models.storage.all().items()
+                    if key.split('.')[0] == class_name
+                    ]
             print(instances)
 
     def do_update(self, arg):
@@ -169,6 +175,7 @@ class HBNBCommand(cmd.Cmd):
         instance = objects[key]
         setattr(instance, attr_name, attr_value)
         storage.save()
+
 
 if __name__ == '__main__':
     try:
