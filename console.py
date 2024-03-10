@@ -119,7 +119,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """Prints all string representation of all instances"""
         if not arg:
-            instances = models.storag.all().values()
+            instances = models.storage.all().values()
             print([str(instance) for instance in instances])
         else:
             class_name = arg.split()[0]
