@@ -3,6 +3,7 @@
 import json
 import os
 
+
 class FileStorage:
     """
     A class for handling storage and retrieval of objects in a JSON file.
